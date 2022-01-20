@@ -4,6 +4,8 @@
         <menuitem name="Sample Transport" id="sample_transport_root_menu" web_icon="sample_transport,static/src/img/icon.png"/>
         <menuitem name="Transport" id="sampletransport_transport_menu" parent="sample_transport_root_menu"
               sequence="2" />
+        <menuitem name="Settings" id="settings_menu" parent="sample_transport_root_menu" sequence="7"/>
+        <menuitem name="Test Types" id="test_types_menu" parent="settings_menu" sequence="2" action="test_type_action"/>
         <!-- This Menu Item Must have a parent -->
         <menuitem id="facility_menu" name="Facilities" parent="sample_transport_root_menu" sequence="3"/>
         <!-- This Menu Item Must have a parent -->

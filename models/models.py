@@ -8,13 +8,16 @@ class SampleTransport(models.Model):
     _description = 'SampleTransport'
 
     name = fields.Char()
-    test_type = fields.Selection(
-        string='Test_type',
-        selection=[('viral load', 'Viral Load'),
-                   ('eid', 'EID'),
-                   ('sputum(genxpert/culture', 'Sputum(GeneXpert/Culture'),
-                   ],
-        required=False, )
+    state = fields.Selection(
+        string='State',
+        selection=[('draft', 'draft'),
+                   ('in process', 'in process'),
+                   ('completed', 'completed'),],
+        required=False, default='draft', track_visibility=True, trace_visibility='onchange',)
+
+    test_type = fields.Many2many(
+        comodel_name='test.type',
+        string='Test Type')
         
     receiving_lab = fields.Many2one(
         comodel_name='lab.facility',
@@ -43,7 +46,8 @@ class SampleTransport(models.Model):
     temperature_send = fields.Float(
         string='Temperature at Sending Time',
         required=False)
-    third_pl = fields.Many2one(comodel_name='third.pl', string='3PL')
+    third_pl = fields.Many2one(comodel_name='third.pl', string='3PL Name')
+    third_pl_phone = fields.Char(string='3PL Phone', related='third_pl.phone', readonly=True)
     patient_sample_details = fields.One2many(
         comodel_name='patient.sampledetails',
         inverse_name='sample_transport_id',
@@ -194,6 +198,15 @@ class PatientResultDetails(models.Model):
         string="Reason for rejection",
         required=False)
     comment = fields.Text(string='Comment', required=False)
+
+
+class TestType(models.Model):
+    _name = 'test.type'
+    _description = 'Test Type'
+
+    name = fields.Char()
+
+
 
 # class sample_transport(models.Model):
 #     _name = 'sample_transport.sample_transport'

@@ -1,60 +1,84 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
-    <!--
-    <record model="ir.ui.view" id="sample_transport.list">
-      <field name="name">sample_transport list</field>
-      <field name="model">sample_transport.sample_transport</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </tree>
-      </field>
-    </record>
-    -->
+    <record id="specimen_transport_view_form" model="ir.ui.view">
+        <field name="name">specimen_transport_view_form</field>
+        <field name="model">sample.transport</field>
+        <field name="arch" type="xml">
+            <form string="Specimen Transport Form">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in process,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                            <group>
+                                <field name="test_type" widget="many2many_checkboxes" options="{'no_create_edit': True'}"/>
+                            </group>
+                            <group>
+                                <field name="sending_lab"/>
+                                <field name="sending_staff"/>
+                                <field name="date_time_sent"/>
+                            </group>
 
-    <!-- actions opening views on models -->
-    <!--
-    <record model="ir.actions.act_window" id="sample_transport.action_window">
-      <field name="name">sample_transport window</field>
-      <field name="res_model">sample_transport.sample_transport</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    -->
+                    </group>
+                    <group>
+                        <group>
+                            <field name="total_samples_sent"/>
+                            <field name="specimen_type"/>
+                            <field name="temperature_send"/>
+                        </group>
+                        <group>
+                            <field name="third_pl"/>
+                            <field name="third_pl_phone"/>
+                        </group>
+                    </group>
+                        <notebook>
+                            <page>
+                                <field name="patient_sample_details">
+                                    <tree>
+                                        <field name="patient_code"/>
+                                        <field name="sample_sent"/>
+                                        <field name="sample_received"/>
+                                        <field name="sample_accepted"/>
+                                        <field name="reason_for_rejection"/>
+                                        <field name="comment"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    <group>
+                        <group>
+                            <field name="receiving_lab"/>
+                            <field name="receiving_staff"/>
+                        </group>
+                        <group>
+                            <field name="total_samples_received"/>
+                            <field name="date_time_received"/>
+                        </group>
+                    </group>
 
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="sample_transport.action_server">
-      <field name="name">sample_transport server</field>
-      <field name="model_id" ref="model_sample_transport_sample_transport"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
 
-    <!-- Top menu item -->
-    <!--
-    <menuitem name="sample_transport" id="sample_transport.menu_root"/>
-    -->
-    <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="sample_transport.menu_1" parent="sample_transport.menu_root"/>
-    <menuitem name="Menu 2" id="sample_transport.menu_2" parent="sample_transport.menu_root"/>
-    -->
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="sample_transport.menu_1_list" parent="sample_transport.menu_1"
-              action="sample_transport.action_window"/>
-    <menuitem name="Server to list" id="sample_transport" parent="sample_transport.menu_2"
-              action="sample_transport.action_server"/>
-    -->
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+      <record id="sample_transport_view_tree" model="ir.ui.view">
+          <field name="name">sample_transport_view_tree</field>
+          <field name="model">sample.transport</field>
+          <field name="arch" type="xml">
+              <tree string="sample_transport_tree">
+                  <field name="name"/>
+                  <field name="sending_lab"/>
+                  <field name="date_time_sent"/>
+                  <field name="total_samples_sent"/>
+                  <field name="specimen_type"/>
+                  <field name="third_pl"/>
+                  <field name="receiving_lab"/>
+                  <field name="total_samples_received"/>
+                  <field name="date_time_received"/>
+                  <field name="state"/>
+              </tree>
+          </field>
+      </record>
   </data>
 </odoo>
