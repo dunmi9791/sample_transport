@@ -29,8 +29,8 @@ class SampleTransport(models.Model):
         string='Sending Facility',
         required=False)
     sending_staff = fields.Many2one(comodel_name='facility.staff', string='Sending staff', required=False)
-    date_time_sent = fields.DateTimeField(string='Date and Time Sent')
-    date_time_received = fields.DateTimeField(string='Date and Time Received')
+    date_time_sent = fields.Datetime(string='Date and Time Sent')
+    date_time_received = fields.Datetime(string='Date and Time Received')
     total_samples_sent = fields.Integer(
         string='Total samples sent',
         required=False)
@@ -107,6 +107,9 @@ class FacilityStaff(models.Model):
     name = fields.Char(string='Name')
     phone = fields.Char(string='Phone Number')
     facility_id = fields.Many2one(comodel_name='lab.facility')
+    
+
+
 # class sample_transport(models.Model):
 #     _name = 'sample_transport.sample_transport'
 

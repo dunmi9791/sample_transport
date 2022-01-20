@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sample_transport_sample_transport,sample_transport.sample_transport,model_sample_transport,,1,1,1,0
+access_sample_transport_sample_transport,sample_transport.sample_transport,sample_transport.model_sample_transport,,1,1,1,0
 access_sample_transport_third_pl,sample_transport.third_pl,model_third_pl,,1,1,1,0
 access_sample_transport_patient_code,sample_transport.patient_code,model_patient_code,,1,1,1,0
 access_sample_transport_lab_facility,sample_transport.lab_facility,model_lab_facility,,1,1,1,0
