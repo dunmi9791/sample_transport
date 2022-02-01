@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError
+from odoo.tools.translate import _
+from datetime import date
+
 
 
 class SampleTransport(models.Model):
     _name = 'sample.transport'
     _description = 'SampleTransport'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char()
     state = fields.Selection(
@@ -14,6 +19,8 @@ class SampleTransport(models.Model):
                    ('in process', 'in process'),
                    ('completed', 'completed'),],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange',)
+    st_no = fields.Char(string="Sample Transport No.", default=lambda self: _('New'), requires=False, readonly=True,
+                          trace_visibility='onchange', )
 
     test_type = fields.Many2many(
         comodel_name='test.type',
@@ -54,6 +61,13 @@ class SampleTransport(models.Model):
         string='Patient Sample Details',
         required=False)
 
+    @api.model
+    def create(self, vals):
+        if vals.get('st_no', _('New')) == _('New'):
+            vals['st_no'] = self.env['ir.sequence'].next_by_code('increment_sample_transport') or _('New')
+        result = super(SampleTransport, self).create(vals)
+        return result
+
 
 class PatientSampleDetails(models.Model):
     _name = 'patient.sampledetails'
@@ -77,6 +91,15 @@ class PatientSampleDetails(models.Model):
         string="Reason for rejection",
         required=False)
     comment = fields.Text(string='Comment', required=False)
+    state = fields.Selection(
+        string='Status',
+        selection=[('draft', 'draft'),
+                   ('sample sent', 'sample sent'),
+                   ('sample received', 'received awaiting result'),
+                   ('sample rejected', 'sample rejected'),
+                   ('result dispatched', 'result dispatched'),
+                   ('result delivered', 'result delivered')],
+        required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
 
 
 class ThirdPl(models.Model):

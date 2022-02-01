@@ -6,3 +6,4 @@ access_sample_transport_lab_facility,sample_transport.lab_facility,model_lab_fac
 access_sample_transport_staff_facility,sample_transport.staff_facility,model_staff_facility,,1,1,1,0
 access_sample_transport_test_types,sample_transport.test_types,model_test_type,,1,1,1,0
 access_sample_transport_sample_details,sample_transport.sample_details,model_patient_sampledetails,,1,1,1,0
+access_sample_transport_sample_details,sample_transport.sample_details,model_patient_sampledetails,,1,1,1,0
