@@ -10,10 +10,12 @@
         <menuitem id="facility_menu" name="Facilities" parent="sample_transport_root_menu" sequence="3"/>
         <!-- This Menu Item Must have a parent -->
         <menuitem id="specimen_transport_menu" name="Specimen Transport" parent="sampletransport_transport_menu" sequence="4" action="specimen_action"/>
-        <menuitem id="result_transport_menu" name="Result Transport" parent="sampletransport_transport_menu" sequence="5"/>
+        <menuitem id="result_transport_menu" name="Result Transport" parent="sampletransport_transport_menu" sequence="5" action="result_action"/>
         <!-- This Menu Item Must have a parent -->
         <menuitem id="facilities_menu" name="Facilities" parent="facility_menu" sequence="5"/>
         <menuitem id="facility_staff_menu" name="Facility Staffs" parent="facility_menu" sequence="6"/>
+        <menuitem name="Dashboard" parent="sample_transport_root_menu" action="board.open_board_my_dash_action" sequence="1"  id="menu_dashboard"/>
+
 
 
 

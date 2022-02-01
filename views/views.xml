@@ -82,5 +82,68 @@
               </tree>
           </field>
       </record>
+      <record id="result_transport_view_form" model="ir.ui.view">
+        <field name="name">result_transport_view_form</field>
+        <field name="model">result.transport</field>
+        <field name="arch" type="xml">
+            <form string="Result Transport Form">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in process,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                            <group>
+                                <field name="rt_no"/>
+                                <field name="test_type" widget="many2many_checkboxes" options="{'no_create_edit': True'}"/>
+                            </group>
+                            <group>
+                                <field name="sending_lab"/>
+                                <field name="sending_staff"/>
+                                <field name="date_time_sent"/>
+                            </group>
+
+                    </group>
+                    <group>
+                        <group>
+                            <field name="total_results_sent"/>
+
+                        </group>
+                        <group>
+                            <field name="third_pl"/>
+                            <field name="third_pl_phone"/>
+                        </group>
+                    </group>
+                        <notebook>
+                            <page>
+                                <field name="patient_result_details">
+                                    <tree>
+                                        <field name="patient_code"/>
+                                        <field name="result_sent"/>
+                                        <field name="result_received"/>
+                                        <field name="result_accepted"/>
+                                        <field name="reason_for_rejection"/>
+                                        <field name="comment"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    <group>
+                        <group>
+                            <field name="receiving_lab"/>
+                            <field name="receiving_staff"/>
+                        </group>
+                        <group>
+                            <field name="total_results_received"/>
+                            <field name="date_time_received"/>
+                        </group>
+                    </group>
+
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
   </data>
 </odoo>

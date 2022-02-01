@@ -38,7 +38,7 @@ class SampleTransport(models.Model):
         comodel_name='lab.facility',
         string='Sending Facility',
         required=False)
-    sending_staff = fields.Many2one(comodel_name='facility.staff', string='Sending staff', required=False)
+    sending_staff = fields.Many2one(comodel_name='staff.facility', string='Sending staff', required=False)
     date_time_sent = fields.Datetime(string='Date and Time Sent')
     date_time_received = fields.Datetime(string='Date and Time Received')
     total_samples_sent = fields.Integer(
@@ -100,6 +100,7 @@ class PatientSampleDetails(models.Model):
                    ('result dispatched', 'result dispatched'),
                    ('result delivered', 'result delivered')],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
+    turnaround_time = fields.Char(string='Turnaround Time', required=False)
 
 
 class ThirdPl(models.Model):
@@ -154,16 +155,20 @@ class FacilityStaff(models.Model):
 class ResultTransport(models.Model):
     _name = 'result.transport'
     _description = 'Result Transport'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char()
-    test_type = fields.Selection(
-        string='Test_type',
-        selection=[('viral load', 'Viral Load'),
-                   ('eid', 'EID'),
-                   ('sputum(genxpert/culture', 'Sputum(GeneXpert/Culture'),
-                   ],
-        required=False, )
-
+    test_type = fields.Many2many(
+        comodel_name='test.type',
+        string='Test Type')
+    state = fields.Selection(
+        string='State',
+        selection=[('draft', 'draft'),
+                   ('in process', 'in process'),
+                   ('completed', 'completed'), ],
+        required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
+    rt_no = fields.Char(string="Sample Transport No.", default=lambda self: _('New'), requires=False, readonly=True,
+                        trace_visibility='onchange', )
     receiving_lab = fields.Many2one(
         comodel_name='lab.facility',
         string='Receiving Facility',
@@ -182,7 +187,7 @@ class ResultTransport(models.Model):
     total_results_sent = fields.Integer(
         string='Total results sent',
         required=False)
-    total_samples_received = fields.Integer(
+    total_results_received = fields.Integer(
         string='Total results Received',
         required=False)
     specimen_type = fields.Char(
@@ -197,6 +202,14 @@ class ResultTransport(models.Model):
         inverse_name='result_transport_id',
         string='Patient_result_details',
         required=False)
+    third_pl_phone = fields.Char(string='3PL Phone', related='third_pl.phone', readonly=True)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('rt_no', _('New')) == _('New'):
+            vals['rt_no'] = self.env['ir.sequence'].next_by_code('increment_result_transport') or _('New')
+        result = super(ResultTransport, self).create(vals)
+        return result
 
 
 class PatientResultDetails(models.Model):
@@ -208,19 +221,28 @@ class PatientResultDetails(models.Model):
         string='Result transport id',
         required=False)
     patient_code = fields.Many2one(comodel_name='patient.code', string='Patient Code')
-    sample_sent = fields.Boolean(
+    result_sent = fields.Boolean(
         string='Results sent',
         required=False)
-    sample_received = fields.Boolean(
+    result_received = fields.Boolean(
         string='Results Received',
         required=False)
-    sample_accepted = fields.Boolean(
+    result_accepted = fields.Boolean(
         string='Results Accepted',
         required=False)
     reason_for_rejection = fields.Text(
         string="Reason for rejection",
         required=False)
     comment = fields.Text(string='Comment', required=False)
+    state = fields.Selection(
+        string='Status',
+        selection=[('draft', 'draft'),
+                   ('result sent', 'result sent'),
+                   ('result received', 'received '),
+                   ('sample rejected', 'sample rejected'),
+                   ('result dispatched', 'result dispatched'),
+                   ('result delivered', 'result delivered')],
+        required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
 
 
 class TestType(models.Model):
@@ -228,6 +250,11 @@ class TestType(models.Model):
     _description = 'Test Type'
 
     name = fields.Char()
+
+
+
+
+
 
 
 

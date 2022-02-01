@@ -7,3 +7,5 @@ access_sample_transport_staff_facility,sample_transport.staff_facility,model_sta
 access_sample_transport_test_types,sample_transport.test_types,model_test_type,,1,1,1,0
 access_sample_transport_sample_details,sample_transport.sample_details,model_patient_sampledetails,,1,1,1,0
 access_sample_transport_sample_details,sample_transport.sample_details,model_patient_sampledetails,,1,1,1,0
+access_sample_transport_facility_staff,sample_transport.facility_staff,model_staff_facility,,1,1,1,0
+access_sample_transport_result_transport,sample_transport.result_transport,model_result_transport,,1,1,1,0
