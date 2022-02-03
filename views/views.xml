@@ -35,7 +35,7 @@
                         <notebook>
                             <page>
                                 <field name="patient_sample_details">
-                                    <tree>
+                                    <tree create="true" delete="true" editable="bottom">
                                         <field name="patient_code"/>
                                         <field name="sample_sent"/>
                                         <field name="sample_received"/>
@@ -43,6 +43,7 @@
                                         <field name="reason_for_rejection"/>
                                         <field name="comment"/>
                                         <field name="state"/>
+                                        <field name="turnaround_time"/>
                                     </tree>
                                 </field>
                             </page>
@@ -116,7 +117,7 @@
                         <notebook>
                             <page>
                                 <field name="patient_result_details">
-                                    <tree>
+                                    <tree create="true" delete="true" editable="bottom">
                                         <field name="patient_code"/>
                                         <field name="result_sent"/>
                                         <field name="result_received"/>

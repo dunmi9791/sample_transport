@@ -243,6 +243,7 @@ class PatientResultDetails(models.Model):
                    ('result dispatched', 'result dispatched'),
                    ('result delivered', 'result delivered')],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
+    linked_sample = fields.Many2one(comodel_name="patient.sampledetails", string='Linked Sample')
 
 
 class TestType(models.Model):
