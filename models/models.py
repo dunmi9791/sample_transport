@@ -10,6 +10,7 @@ from datetime import date
 class SampleTransport(models.Model):
     _name = 'sample.transport'
     _description = 'SampleTransport'
+    _rec_name = 'st_no'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char()
@@ -22,7 +23,7 @@ class SampleTransport(models.Model):
     st_no = fields.Char(string="Sample Transport No.", default=lambda self: _('New'), requires=False, readonly=True,
                           trace_visibility='onchange', )
 
-    test_type = fields.Many2many(
+    test_type = fields.Many2one(
         comodel_name='test.type',
         string='Test Type')
         
@@ -53,6 +54,9 @@ class SampleTransport(models.Model):
     temperature_send = fields.Float(
         string='Temperature at Sending Time',
         required=False)
+    temperature_receive = fields.Float(
+        string='Temperature at Received time',
+        required=False)
     third_pl = fields.Many2one(comodel_name='third.pl', string='3PL Name')
     third_pl_phone = fields.Char(string='3PL Phone', related='third_pl.phone', readonly=True)
     patient_sample_details = fields.One2many(
@@ -72,6 +76,7 @@ class SampleTransport(models.Model):
 class PatientSampleDetails(models.Model):
     _name = 'patient.sampledetails'
     _description = 'Patient Sample Details'
+    _rec_name = 'sample_transport_id'
 
     sample_transport_id = fields.Many2one(
        comodel_name='sample.transport',
@@ -215,6 +220,7 @@ class ResultTransport(models.Model):
 class PatientResultDetails(models.Model):
     _name = 'patient.resultdetails'
     _description = 'Patient Result Details'
+
 
     result_transport_id = fields.Many2one(
         comodel_name='result.transport',
