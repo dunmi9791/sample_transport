@@ -42,12 +42,12 @@ class SampleTransport(models.Model):
     sending_staff = fields.Many2one(comodel_name='staff.facility', string='Sending staff', required=False)
     date_time_sent = fields.Datetime(string='Date and Time Sent')
     date_time_received = fields.Datetime(string='Date and Time Received')
-    total_samples_sent = fields.Integer(
-        string='Total samples sent',
-        required=False)
-    total_samples_received = fields.Integer(
-        string='Total samples Received',
-        required=False)
+    total_samples_sent = fields.Integer(compute='count_sent',
+                                        string='Total samples sent',
+                                        )
+    total_samples_received = fields.Integer(compute='count_received',
+                                            string='Total samples Received',
+                                            required=False)
     specimen_type = fields.Char(
         string='Specimen Type',
         required=False)
@@ -71,6 +71,26 @@ class SampleTransport(models.Model):
             vals['st_no'] = self.env['ir.sequence'].next_by_code('increment_sample_transport') or _('New')
         result = super(SampleTransport, self).create(vals)
         return result
+
+    @api.multi
+    def count_sent(self):
+        patient_sample_details = self.env['patient.sampledetails']
+        for sample in self:
+            sample.total_samples_sent = patient_sample_details.search_count([('sample_transport_id', '=', sample.id), ('sample_sent', '=', True)])
+
+    @api.multi
+    def count_received(self):
+        patient_sample_details = self.env['patient.sampledetails']
+        for sample in self:
+            sample.total_samples_received = patient_sample_details.search_count(
+                [('sample_transport_id', '=', sample.id), ('sample_received', '=', True)])
+        # return len(self.patient_sample_details)
+        # for sent in self:
+        #     sent_count = self.env['patient.sampledetails'].search_count([
+        #         ('sample_transport_id', '=', self.id)])
+        #     return sent_count
+
+
 
 
 class PatientSampleDetails(models.Model):
@@ -126,6 +146,10 @@ class Patient(models.Model):
         string='Sex',
         selection=[('male', 'male'), ('female', 'female'), ],
         required=False, )
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', "Patient code already exists !"),
+    ]
 
 
 class LaboratoryFacilities(models.Model):
