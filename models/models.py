@@ -273,7 +273,14 @@ class PatientResultDetails(models.Model):
                    ('result dispatched', 'result dispatched'),
                    ('result delivered', 'result delivered')],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
-    linked_sample = fields.Many2one(comodel_name="patient.sampledetails", string='Linked Sample')
+    linked_sample = fields.Many2one(comodel_name="patient.sampledetails", string='Linked Sample',
+                                    )
+
+   
+    @api.onchange('patient_code')
+    def onchange_patient_code(self):
+        for rec in self:
+            return {'domain': {'linked_sample': [('patient_code', '=', rec.patient_code.id)]}}
 
 
 class TestType(models.Model):
