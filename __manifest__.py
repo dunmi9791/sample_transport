@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'mail', 'board'],
+    'depends': ['base', 'mail', 'board', 'ks_dashboard_ninja'],
 
     # always loaded
     'data': [

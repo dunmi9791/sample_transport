@@ -40,6 +40,7 @@
                                         <field name="sample_sent"/>
                                         <field name="sample_received"/>
                                         <field name="sample_accepted"/>
+                                        <field name="sample_rejected"/>
                                         <field name="reason_for_rejection"/>
                                         <field name="comment"/>
                                         <field name="state"/>
@@ -152,5 +153,32 @@
             </form>
         </field>
     </record>
+      <record id="facilities_view_form" model="ir.ui.view">
+          <field name="name">facilities_view_form</field>
+          <field name="model">lab.facility</field>
+          <field name="arch" type="xml">
+              <form string="facilities">
+                  <sheet>
+                      <group>
+                          <field name="name"/>
+
+                      </group>
+                      <notebook>
+                            <page string="Staffs">
+                                <field name="facility_staff">
+
+                                </field>
+                            </page>
+                          <page string="Patients">
+
+                          </page>
+                          <page string="Outstanding Results">
+
+                          </page>
+                        </notebook>
+                  </sheet>
+              </form>
+          </field>
+      </record>
   </data>
 </odoo>
