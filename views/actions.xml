@@ -41,6 +41,20 @@
             </field>
 
         </record>
+        <record id="projects_action" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.sample</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+              </p><p>
+                <!-- More details about what a user can do with this object will be OK -->
+              </p>
+            </field>
+
+        </record>
         <record id="result_action" model="ir.actions.act_window">
                 <field name="name">Result Transport</field>
                 <field name="type">ir.actions.act_window</field>

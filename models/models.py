@@ -6,7 +6,6 @@ from odoo.tools.translate import _
 from datetime import date
 
 
-
 class SampleTransport(models.Model):
     _name = 'sample.transport'
     _description = 'SampleTransport'
@@ -21,7 +20,11 @@ class SampleTransport(models.Model):
                    ('completed', 'completed'),],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange',)
     st_no = fields.Char(string="Sample Transport No.", default=lambda self: _('New'), requires=False, readonly=True,
-                          trace_visibility='onchange', )
+                        trace_visibility='onchange', )
+    project = fields.Many2one(
+        comodel_name='project.sample',
+        string='Project',
+        required=False)
 
     test_type = fields.Many2one(
         comodel_name='test.type',
@@ -64,6 +67,39 @@ class SampleTransport(models.Model):
         inverse_name='sample_transport_id',
         string='Patient Sample Details',
         required=False)
+
+    @api.multi
+    def is_allowed_transition(self, old_state, new_state):
+        allowed = [('draft', 'in process'),
+                   ('in process', 'completed'),
+                   ]
+        return (old_state, new_state) in allowed
+
+    @api.multi
+    def change_state(self, new_state):
+        for sample in self:
+            if sample.is_allowed_transition(sample.state, new_state):
+                sample.state = new_state
+            else:
+                msg = _('Moving from %s to %s is not allowed') % (sample.state, new_state)
+                raise UserError(msg)
+
+    @api.multi
+    def sample_deliver(self):
+        lines = []
+        for rec in self.patient_sample_details:
+            # val = {
+            #     'id': rec.id,
+            #     'state': 'sample received'
+            # }
+            # lines.append(val)
+            patient = self.env['patient.sampledetails'].search([('id', '=', rec.id)]).ensure_one()
+            patient.write({
+                'state': 'sample received'
+            })
+        self.change_state('in process')
+
+
 
     @api.model
     def create(self, vals):
@@ -264,6 +300,23 @@ class TestType(models.Model):
     _description = 'Test Type'
 
     name = fields.Char()
+
+
+class ProjectSample(models.Model):
+    _name = 'project.sample'
+    _description = 'Projects'
+
+    name = fields.Char()
+    client = fields.Many2one(
+        comodel_name='res.partner',
+        string='Client',
+        required=False)
+    start_date = fields.Date(
+        string='Start date',
+        required=False)
+    end_date = fields.Date(
+        string='End date',
+        required=False)
 
 
 
