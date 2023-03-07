@@ -12,14 +12,14 @@ class LaboratoryFacilities(models.Model):
     _description = 'Laboratory Facilities'
 
     name = fields.Char(string='Facility Name/Code')
-    state = fields.Many2one(
-        comodel_name='states.nigeria',
-        string='State',
-        required=False)
-    lga = fields.Many2one(
-        comodel_name='lga.state',
-        string='LGA',
-    )
+    # state = fields.Many2one(
+    #     comodel_name='states.nigeria',
+    #     string='State',
+    #     required=False)
+    # lga = fields.Many2one(
+    #     comodel_name='lga.state',
+    #     string='LGA',
+    # )
     facility_staff = fields.One2many(
         comodel_name='staff.facility',
         inverse_name='facility_id',
