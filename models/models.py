@@ -35,7 +35,7 @@ class SampleTransport(models.Model):
         string='Receiving Facility',
         required=False)
     receiving_staff = fields.Many2one(
-        comodel_name='facility.staff',
+        comodel_name='staff.facility',
         string='Receiving staff',
         required=False)
     sending_lab = fields.Many2one(
@@ -192,7 +192,6 @@ class Patient(models.Model):
     # ]
 
 
-
 class ResultTransport(models.Model):
     _name = 'result.transport'
     _description = 'Result Transport'
@@ -215,14 +214,14 @@ class ResultTransport(models.Model):
         string='Receiving Facility',
         required=False)
     receiving_staff = fields.Many2one(
-        comodel_name='facility.staff',
+        comodel_name='staff.facility',
         string='Receiving staff',
         required=False)
     sending_lab = fields.Many2one(
         comodel_name='lab.facility',
         string='Sending Facility',
         required=False)
-    sending_staff = fields.Many2one(comodel_name='facility.staff', string='Sending staff', required=False)
+    sending_staff = fields.Many2one(comodel_name='staff.facility', string='Sending staff', required=False)
     date_time_sent = fields.Datetime(string='Date and Time Sent')
     date_time_received = fields.Datetime(string='Date and Time Received')
     total_results_sent = fields.Integer(
