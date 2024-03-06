@@ -40,7 +40,9 @@
                             <page>
                                 <field name="patient_sample_details">
                                     <tree create="true" delete="true" editable="bottom">
-                                        <field name="patient_code"/>
+                                        <field name="patient_code_domain" invisible="1"/>
+                                        <field name="patient_code" domain="patient_code_domain"/>
+                                        <field name="related_sending_lab_id"/>
                                         <field name="sample_sent"/>
                                         <field name="sample_received"/>
                                         <field name="sample_accepted"/>
@@ -174,6 +176,7 @@
                                 </field>
                             </page>
                           <page string="Patients">
+                              <field name="facility_patient"/>
 
                           </page>
                           <page string="Outstanding Results">

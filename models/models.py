@@ -4,6 +4,7 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 from datetime import date
+import json
 
 
 class SampleTransport(models.Model):
@@ -85,6 +86,13 @@ class SampleTransport(models.Model):
             else:
                 msg = _('Moving from %s to %s is not allowed') % (sample.state, new_state)
                 raise UserError(msg)
+
+    @api.onchange('sending_lab')
+    def _onchange_sending_lab(self):
+        if self.sending_lab:
+            return {'domain': {'patient_sample_details.patient_code': [('facility_id', '=', self.sending_lab.id)]}}
+        else:
+            return {'domain': {'patient_sample_details.patient_code': []}}
 
     @api.multi
     def sample_deliver(self):
@@ -174,7 +182,18 @@ class PatientSampleDetails(models.Model):
        comodel_name='sample.transport',
        string='Sample transport id',
        required=False)
-    patient_code = fields.Many2one(comodel_name='patient.code', string='Patient Code')
+    patient_code = fields.Many2one(comodel_name='patient.code', string='Patient Code',)
+    patient_code_domain = fields.Char(
+        compute="_compute_patient_code_domain",
+        readonly=True,
+        store=False,
+    )
+    related_sending_lab_id = fields.Many2one(
+        comodel_name='lab.facility',
+        string='Sending Lab',
+        related='sample_transport_id.sending_lab',
+        store=True  # Optional: set to True if you want to store the value in the database
+    )
     sample_sent = fields.Boolean(
         string='Sample sent',
         required=False)
@@ -201,6 +220,21 @@ class PatientSampleDetails(models.Model):
                    ('result delivered', 'result delivered')],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange', )
     turnaround_time = fields.Char(string='Turnaround Time', required=False)
+
+    @api.multi
+    @api.depends('related_sending_lab_id')
+    def _compute_patient_code_domain(self):
+        for rec in self:
+            rec.patient_code_domain = json.dumps(
+                [('facility_id', '=', rec.related_sending_lab_id.id)]
+            )
+
+    @api.onchange('related_sending_lab_id')
+    def _onchange_related_sending_lab_id(self):
+        for rec in self:
+            return {'domain': {'patient_code': [('id', 'in', rec.related_sending_lab_id.facility_patient.ids)]}}
+        else:
+            return {'domain': {'patient_code': []}}
 
 
 class ThirdPl(models.Model):
