@@ -29,6 +29,7 @@
         'views/menus.xml',
         'views/views.xml',
         'views/templates.xml',
+        'wizard/rejects.xml',
         'data/automation.xml',
     ],
     # only loaded in demonstration mode

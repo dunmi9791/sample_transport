@@ -6,8 +6,10 @@
         <field name="arch" type="xml">
             <form string="Specimen Transport Form">
                 <header>
-                    <button name="sample_deliver" string="Deliver" class="oe_highlight" states="draft" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,in process,completed"/>
+                    <button name="sample_deliver" string="Deliver Samples" class="oe_highlight" states="in process" type="object"/>
+                    <button name="sample_pickup" string="Pickup Samples" class="oe_highlight" states="draft" type="object"/>
+                    <button name="open_sample_rider_wizard" string="Reject Samples" class="oe_highlight" states="sample delivered" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in process,sample delivered,completed"/>
                 </header>
                 <sheet>
                     <group>

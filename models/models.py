@@ -17,6 +17,7 @@ class SampleTransport(models.Model):
         string='State',
         selection=[('draft', 'draft'),
                    ('in process', 'in process'),
+                   ('sample delivered', 'sample delivered'),
                    ('completed', 'completed'),],
         required=False, default='draft', track_visibility=True, trace_visibility='onchange',)
     st_no = fields.Char(string="Sample Transport No.", default=lambda self: _('New'), requires=False, readonly=True,
@@ -71,7 +72,8 @@ class SampleTransport(models.Model):
     @api.multi
     def is_allowed_transition(self, old_state, new_state):
         allowed = [('draft', 'in process'),
-                   ('in process', 'completed'),
+                   ('in process', 'sample delivered'),
+                   ('sample delivered', 'completed'),
                    ]
         return (old_state, new_state) in allowed
 
@@ -95,9 +97,42 @@ class SampleTransport(models.Model):
             # lines.append(val)
             patient = self.env['patient.sampledetails'].search([('id', '=', rec.id)]).ensure_one()
             patient.write({
-                'state': 'sample received'
+                'state': 'sample received',
+                'sample_received': True,
+                'sample_accepted': True,
+            })
+        self.change_state('sample delivered')
+
+    @api.multi
+    def sample_pickup(self):
+        lines = []
+        for rec in self.patient_sample_details:
+            # val = {
+            #     'id': rec.id,
+            #     'state': 'sample received'
+            # }
+            # lines.append(val)
+            patient = self.env['patient.sampledetails'].search([('id', '=', rec.id)]).ensure_one()
+            patient.write({
+                'state': 'sample sent',
+                'sample_sent': True,
+
             })
         self.change_state('in process')
+
+    @api.multi
+    def open_sample_rider_wizard(self):
+        action = {
+            'name': 'Select Details',
+            'type': 'ir.actions.act_window',
+            'res_model': 'sample.rider.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_detail_ids': [(6, 0, self.patient_sample_details.ids)]
+            }
+        }
+        return action
 
 
 
@@ -112,7 +147,8 @@ class SampleTransport(models.Model):
     def count_sent(self):
         patient_sample_details = self.env['patient.sampledetails']
         for sample in self:
-            sample.total_samples_sent = patient_sample_details.search_count([('sample_transport_id', '=', sample.id), ('sample_sent', '=', True)])
+            sample.total_samples_sent = patient_sample_details.search_count([('sample_transport_id', '=', sample.id),
+                                                                             ('sample_sent', '=', True)])
 
     @api.multi
     def count_received(self):
@@ -132,7 +168,7 @@ class SampleTransport(models.Model):
 class PatientSampleDetails(models.Model):
     _name = 'patient.sampledetails'
     _description = 'Patient Sample Details'
-    _rec_name = 'sample_transport_id'
+    _rec_name = 'patient_code'
 
     sample_transport_id = fields.Many2one(
        comodel_name='sample.transport',
