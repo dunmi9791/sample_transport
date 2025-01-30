@@ -53,6 +53,7 @@ class SampleTransport(models.Model):
     total_samples_received = fields.Integer(compute='count_received',
                                             string='Total samples Received',
                                             required=False)
+    samples_sent_manual = fields.Integer(string='Samples Sent Manual', required=False)
     specimen_type = fields.Char(
         string='Specimen Type',
         required=False)

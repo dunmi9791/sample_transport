@@ -28,6 +28,7 @@
                     <group>
                         <group>
                             <field name="total_samples_sent"/>
+                            <field name="samples_sent_manual"/>
                             <field name="specimen_type"/>
                             <field name="temperature_send"/>
                         </group>
